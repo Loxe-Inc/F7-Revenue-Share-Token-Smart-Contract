@@ -1,0 +1,150 @@
+cabal-version:      2.4
+name:               revenue-sharing-contract
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+license: Apache-2.0
+license-files: LICENSE
+author:             Your name
+maintainer:         Your email
+
+-- A copyright notice.
+-- copyright:
+-- category:
+-- extra-source-files: CHANGELOG.md
+
+flag defer-plugin-errors
+    description:
+        Defer errors from the plugin, useful for things like Haddock that can't handle it.
+    default: False
+    manual: True
+
+common lang
+    default-language:   Haskell2010
+    ghc-options:
+      -Wall -Wnoncanonical-monad-instances
+      -Wincomplete-uni-patterns -Wincomplete-record-updates
+      -Wredundant-constraints -Widentities -rtsopts
+      -- See Plutus Tx readme
+      -fobject-code -fno-ignore-interface-pragmas -fno-omit-interface-pragmas
+    if flag(defer-plugin-errors)
+        ghc-options: -fplugin-opt PlutusTx.Plugin:defer-errors
+
+library
+    import: lang
+    exposed-modules:
+      Oracle.OffChain,
+      Oracle.OnChain,
+      Oracle.Trace,
+      Oracle.Deploy,
+      PAB,
+      Utils,
+      ContractProperties
+    build-depends:
+      base >= 4.9 && < 5,
+      aeson,
+      bytestring,
+      containers,
+      freer-extras,
+      playground-common,
+      plutus-contract,
+      plutus-tx-plugin,
+      plutus-tx,
+      plutus-ledger,
+      plutus-ledger-constraints,
+      text,
+      data-default,
+      tasty,
+      plutus-ledger-api,
+      plutus-pab,
+      serialise,
+      cardano-ledger-core,
+      cardano-crypto-class,
+      cardano-api,
+      openapi3,
+      tasty-hunit,
+      lens,
+      prettyprinter,
+    hs-source-dirs:
+      src,
+      src/Oracle
+
+executable oracle-pab
+  main-is: oracle-pab.hs
+  hs-source-dirs:   app
+  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:    aeson
+                  , base ^>= 4.14.1.0
+                  , data-default
+                  , freer-extras
+                  , freer-simple
+                  , plutus-contract
+                  , plutus-ledger
+                  , plutus-ledger-constraints
+                  , plutus-pab
+                  , revenue-sharing-contract
+                  , plutus-use-cases
+                  , text
+
+executable start-oracle
+  main-is: start-oracle.hs
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  build-depends:       base ^>= 4.14.1.0
+                     , plutus-contract
+                     , plutus-ledger
+                     , plutus-pab
+                     , revenue-sharing-contract
+                     , req ^>= 3.9.0
+
+executable update-oracle
+  main-is: update-oracle.hs
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  build-depends:       base ^>= 4.14.1.0
+                     , plutus-contract
+                     , plutus-ledger
+                     , plutus-pab
+                     , revenue-sharing-contract
+                     , req ^>= 3.9.0
+
+executable inspect-oracle
+  main-is: inspect-oracle.hs
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  build-depends:       base ^>= 4.14.1.0
+                     , plutus-contract
+                     , plutus-ledger
+                     , plutus-pab
+                     , revenue-sharing-contract
+                     , req ^>= 3.9.0
+
+executable send-rewards
+  main-is: send-rewards.hs
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  build-depends:       base ^>= 4.14.1.0
+                     , plutus-contract
+                     , plutus-ledger
+                     , plutus-pab
+                     , revenue-sharing-contract
+                     , req ^>= 3.9.0
+
+executable pay-to-script
+  main-is: pay-to-script.hs
+  hs-source-dirs:      app
+  ghc-options:         -Wall
+  build-depends:       base ^>= 4.14.1.0
+                     , plutus-contract
+                     , plutus-ledger
+                     , plutus-pab
+                     , revenue-sharing-contract
+                     , req ^>= 3.9.0
